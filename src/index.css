@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Crimson Text', serif;
+  }
+}
+
+@layer components {
+  .vintage-bg {
+    background: linear-gradient(to bottom, #f5e6d3 0%, #f0ddc3 100%);
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(139, 69, 19, 0.08) 31px,
+        rgba(139, 69, 19, 0.08) 32px
+      ),
+      linear-gradient(to bottom, #f5e6d3 0%, #f0ddc3 100%);
+    position: relative;
+  }
+
+  .book-spine {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to right,
+      rgba(101, 67, 33, 0.3) 0%,
+      rgba(101, 67, 33, 0.1) 50%,
+      transparent 100%
+    );
+    box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .vintage-entry {
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 2px 8px rgba(101, 67, 33, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(139, 69, 19, 0.15);
+    position: relative;
+  }
+
+  .vintage-entry::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(139, 69, 19, 0.05) 31px,
+        rgba(139, 69, 19, 0.05) 32px
+      );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .typewriter-text {
+    font-family: 'Special Elite', cursive;
+    color: #3d2817;
+    font-size: 1.125rem;
+    letter-spacing: 0.02em;
+    line-height: 2;
+  }
+
+  .typewriter-text::placeholder {
+    color: rgba(139, 69, 19, 0.4);
+    font-style: italic;
+  }
+
+  textarea.typewriter-text:focus {
+    outline: none;
+  }
+
+  button {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+  }
+
+  .candle-bg {
+    background: linear-gradient(to bottom, #1a1410 0%, #2d1f1a 100%);
+    position: relative;
+  }
+
+  .candle-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(255, 215, 0, 0.02) 31px,
+        rgba(255, 215, 0, 0.02) 32px
+      );
+    pointer-events: none;
+  }
+
+  .candle-bg .vintage-entry {
+    background: rgba(60, 40, 30, 0.6);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 8px 32px rgba(255, 215, 0, 0.15),
+      inset 0 1px 0 rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+  }
+
+  .candle-bg .typewriter-text {
+    color: #f5e6d3;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+  }
+
+  .candle-bg .typewriter-text::placeholder {
+    color: rgba(245, 230, 211, 0.3);
+  }
+
+  .candle-bg h1,
+  .candle-bg h2,
+  .candle-bg h3 {
+    color: #f5e6d3;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .candle-bg .text-amber-700,
+  .candle-bg .text-amber-800,
+  .candle-bg .text-amber-900 {
+    color: #daa520;
+  }
+
+  .candle-bg p {
+    color: #daa520;
+  }
+
+  .candle-bg time {
+    color: #daa520;
+  }
+
+  @keyframes flicker {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.2);
+    }
+    50% {
+      opacity: 0.98;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 35px rgba(255, 215, 0, 0.15);
+    }
+  }
+
+  .candle-bg .book-spine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 20px 50%,
+      rgba(255, 215, 0, 0.1) 0%,
+      transparent 50%
+    );
+    animation: flicker 3s ease-in-out infinite;
+  }
+}
