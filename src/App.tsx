@@ -154,7 +154,11 @@ function App() {
       <div className="max-w-4xl mx-auto px-6 py-12">
         <header className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <BookOpen size={48} className="text-amber-800" />
+            <img
+              src="/logo.jpg"
+              alt="My Diary Logo"
+              className="w-32 h-32 object-cover rounded-full border-4 border-amber-900/20 shadow-xl sepia-[.3]"
+            />
           </div>
           <h1 className="font-serif text-5xl text-amber-900 mb-2">My Diary</h1>
           <p className="text-amber-700 italic">A place for your thoughts and memories</p>
