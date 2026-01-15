@@ -1,4 +1,4 @@
-import { Settings as SettingsIcon, Moon, X } from 'lucide-react';
+import { Settings as SettingsIcon, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -19,7 +19,7 @@ export function Settings({ onClose }: SettingsProps) {
 
   const loadSettings = async () => {
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('user_settings')
         .select('*')
         .maybeSingle();
