@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BookOpen, PenLine, Settings as SettingsIcon, BookMarked } from 'lucide-react';
-import { supabase, DiaryEntry as DiaryEntryType, UserSettings } from './lib/supabase';
+import { db, DiaryEntry as DiaryEntryType, UserSettings } from './lib/db';
 import { DiaryEntry } from './components/DiaryEntry';
 import { EntryForm } from './components/EntryForm';
 import { Settings } from './components/Settings';
@@ -24,13 +24,9 @@ function App() {
     loadSettings();
   }, []);
 
-  const loadSettings = async () => {
+  const loadSettings = () => {
     try {
-      const { data } = await supabase
-        .from('user_settings')
-        .select('*')
-        .maybeSingle();
-
+      const data = db.getSettings();
       if (data) {
         setUserSettings(data);
         setTheme(data.theme);
@@ -40,16 +36,16 @@ function App() {
     }
   };
 
-  const loadEntries = async () => {
+  const loadEntries = () => {
     try {
-      const { data, error } = await supabase
-        .from('diary_entries')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const data = db.getEntries();
+      // Sort by created_at descending
+      const sorted = data.sort((a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
 
-      if (error) throw error;
-      setEntries(data || []);
-      setFilteredEntries(data || []);
+      setEntries(sorted);
+      setFilteredEntries(sorted);
     } catch (error) {
       console.error('Error loading entries:', error);
     } finally {
@@ -84,62 +80,43 @@ function App() {
     setFilteredEntries(entries);
   };
 
-  const handleSaveNew = async (content: string, mood?: string, signature?: string) => {
+  const handleSaveNew = (content: string, mood?: string, signature?: string) => {
     try {
-      const { error } = await supabase
-        .from('diary_entries')
-        .insert([{ content, mood, signature, is_pinned: false }]);
-
-      if (error) throw error;
-      await loadEntries();
+      db.saveEntry(content, mood, signature);
+      loadEntries();
       setShowForm(false);
     } catch (error) {
       console.error('Error saving entry:', error);
     }
   };
 
-  const handleUpdate = async (content: string, mood?: string, signature?: string) => {
+  const handleUpdate = (content: string, mood?: string, signature?: string) => {
     if (!editingEntry) return;
 
     try {
-      const { error } = await supabase
-        .from('diary_entries')
-        .update({ content, mood, signature, updated_at: new Date().toISOString() })
-        .eq('id', editingEntry.id);
-
-      if (error) throw error;
-      await loadEntries();
+      db.updateEntry(editingEntry.id, { content, mood, signature });
+      loadEntries();
       setEditingEntry(null);
     } catch (error) {
       console.error('Error updating entry:', error);
     }
   };
 
-  const handlePin = async (id: string, isPinned: boolean) => {
+  const handlePin = (id: string, isPinned: boolean) => {
     try {
-      const { error } = await supabase
-        .from('diary_entries')
-        .update({ is_pinned: isPinned })
-        .eq('id', id);
-
-      if (error) throw error;
-      await loadEntries();
+      db.updateEntry(id, { is_pinned: isPinned });
+      loadEntries();
     } catch (error) {
       console.error('Error pinning entry:', error);
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!confirm('Are you sure you want to delete this entry?')) return;
 
     try {
-      const { error } = await supabase
-        .from('diary_entries')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-      await loadEntries();
+      db.deleteEntry(id);
+      loadEntries();
     } catch (error) {
       console.error('Error deleting entry:', error);
     }

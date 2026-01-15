@@ -1,5 +1,5 @@
 import { Trash2, Edit3, Pin, PinOff } from 'lucide-react';
-import { DiaryEntry as DiaryEntryType } from '../lib/supabase';
+import { DiaryEntry as DiaryEntryType } from '../lib/db';
 
 interface DiaryEntryProps {
   entry: DiaryEntryType;

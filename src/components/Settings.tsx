@@ -1,6 +1,6 @@
 import { Settings as SettingsIcon, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/db';
 
 interface SettingsProps {
   onClose: () => void;
@@ -17,12 +17,9 @@ export function Settings({ onClose }: SettingsProps) {
     loadSettings();
   }, []);
 
-  const loadSettings = async () => {
+  const loadSettings = () => {
     try {
-      const { data } = await supabase
-        .from('user_settings')
-        .select('*')
-        .maybeSingle();
+      const data = db.getSettings();
 
       if (data) {
         setUserName(data.user_name);
@@ -37,33 +34,15 @@ export function Settings({ onClose }: SettingsProps) {
     }
   };
 
-  const saveSettings = async () => {
+  const saveSettings = () => {
     try {
-      const existingSettings = await supabase
-        .from('user_settings')
-        .select('id')
-        .maybeSingle();
+      db.saveSettings({
+        user_name: userName,
+        theme,
+        sounds_enabled: soundsEnabled,
+        sound_type: soundType,
+      });
 
-      if (existingSettings.data) {
-        await supabase
-          .from('user_settings')
-          .update({
-            user_name: userName,
-            theme,
-            sounds_enabled: soundsEnabled,
-            sound_type: soundType,
-          })
-          .eq('id', existingSettings.data.id);
-      } else {
-        await supabase.from('user_settings').insert([
-          {
-            user_name: userName,
-            theme,
-            sounds_enabled: soundsEnabled,
-            sound_type: soundType,
-          },
-        ]);
-      }
       onClose();
       window.location.reload();
     } catch (error) {
@@ -144,3 +123,5 @@ export function Settings({ onClose }: SettingsProps) {
     </div>
   );
 }
+
+

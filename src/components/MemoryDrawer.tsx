@@ -1,5 +1,5 @@
 import { X, BookMarked } from 'lucide-react';
-import { DiaryEntry as DiaryEntryType } from '../lib/supabase';
+import { DiaryEntry as DiaryEntryType } from '../lib/db';
 import { DiaryEntry } from './DiaryEntry';
 
 interface MemoryDrawerProps {
